@@ -55,7 +55,9 @@ var parseReact = function (filePath, doclet) {
   var src = fs.readFileSync(filePath, 'UTF-8')
   var docGen
   try {
-    docGen = reactDocs.parse(src)
+    //docGen = reactDocs.parse(src)
+    //update so can have multi exports in file 
+     docGen = reactDocs.parse(src,reactDocs.resolver.findAllExportedComponentDefinitions)
   } catch (error) {
     if (error.message === 'No suitable component definition found.') {
       return {
@@ -68,8 +70,23 @@ var parseReact = function (filePath, doclet) {
     }
   }
   
+  console.log("WES LOG", docGen);  
+  //need to find correct component from exports
+  let index = undefined;
+
+  for(let i =0; i < docGen.length; i++){
+    if(doclet.name === docGen[i].displayName){
+      index =i;
+    }
+  }
+
+  console.log("Selected Inde", index); 
+  //let selecteddocGen = _.cloneDeep(docGen[index]);
+  let selecteddocGen = docGen[index];
+  
+  console.log("Edited doclet", doclet);
   return {
-    props: Object.entries(docGen.props || {}).map(([key, prop]) => ({
+    props: Object.entries(selecteddocGen.props || {}).map(([key, prop]) => ({
       name: key,
       description: prop.description,
       type: prop.type ? prop.type.name : prop.flowType.name,
@@ -78,7 +95,7 @@ var parseReact = function (filePath, doclet) {
         ? (prop.defaultValue.computed ? 'function()' : prop.defaultValue.value)
         : undefined
     })),
-    displayName: docGen.displayName,
+    displayName: selecteddocGen.displayName,
     filePath: filePath,
   }
 }

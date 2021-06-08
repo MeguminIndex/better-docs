@@ -57,7 +57,7 @@ var parseReact = function (filePath, doclet) {
   try {
     //docGen = reactDocs.parse(src)
     //update so can have multi exports in file 
-     docGen = reactDocs.parse(src,reactDocs.resolver.findAllExportedComponentDefinitions)
+     docGen = reactDocs.parse(src,reactDocs.resolver.findAllComponentDefinitions)
   } catch (error) {
     if (error.message === 'No suitable component definition found.') {
       return {
@@ -80,11 +80,11 @@ var parseReact = function (filePath, doclet) {
     }
   }
 
-  console.log("Selected Inde", index); 
+  //console.log("Selected Inde", index); 
   //let selecteddocGen = _.cloneDeep(docGen[index]);
   let selecteddocGen = docGen[index];
   
-  console.log("Edited doclet", doclet);
+  //console.log("Edited doclet", doclet);
   return {
     props: Object.entries(selecteddocGen.props || {}).map(([key, prop]) => ({
       name: key,

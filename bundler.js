@@ -82,7 +82,10 @@ module.exports = function bundle (Components, out, config) {
   const outDist = path.join(out, 'build')
   const cmd = `${process.platform === 'win32' ? 'SET ' : ''}NODE_ENV=development parcel build ${entry} --out-dir ${outDist}`
   console.log(`running: ${cmd}`)
+
+  console.log("THIS IS THE LOCAL FORKED VERSION!")
   try {
+
     execSync(cmd)
   } catch (error) {
     if(error.output && error.output.length){
